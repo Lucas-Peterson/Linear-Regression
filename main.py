@@ -1,21 +1,30 @@
-import datacommons_pandas as dc
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
 
-usa = 'country/USA'
 
-cities = dc.get_places_in([usa], 'City')[usa]
-'''
-cities_within = dc.get_places_in(cities, "State")
+X = np.array([50, 60, 70, 80, 90]).reshape(-1, 1)  
+y = np.array([150, 180, 210, 240, 270])     
 
-test = dc.get_places_in(["geoId/10"], "County")
 
-print(test)
-'''
-'''
-cities_value = dc.get_property_values(["geoId/10"], 'containedInPlace')
+model = LinearRegression()
+model.fit(X, y)
 
-print(cities_value)
-'''
+a = model.intercept_  
+b = model.coef_[0]    
 
-cities_label = dc.get_property_labels(cities, out=True)
+print(f"Model: price = {a:.2f} + {b:.2f} * area")
 
-print(cities_label)
+
+X_new = np.array([55, 75, 95]).reshape(-1, 1)
+y_pred = model.predict(X_new)
+print(f"Projected prices for areas {X_new.flatten()}: {y_pred}")
+
+
+plt.scatter(X, y, color='blue', label='Start data')
+plt.plot(X, model.predict(X), color='red', label='Line of regression')
+plt.scatter(X_new, y_pred, color='green', label='Predictable prices')
+plt.xlabel('Area (sq.m)')
+plt.ylabel('Price')
+plt.legend()
+plt.show()
